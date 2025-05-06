@@ -1,5 +1,6 @@
 Generate one output for the classification below.
 You may use the examples I have provided as a guide, but you cannot simply modify or rewrite them.
+You may use pronoun and data I provide as a guide for each label.
 Only return the OUTPUT and REASONING. 
 Do not return the LABEL, CATEGORY, or TYPE.
 
