@@ -1,0 +1,11 @@
+Generate one output for the classification below.
+You may use the examples I have provided as a guide, but you cannot simply modify or rewrite them.
+Only return the OUTPUT and REASONING. 
+Do not return the LABEL, CATEGORY, or TYPE.
+
+LABEL: พิธีการ
+CONTACT: Email
+CATEGORY: attendance_issues
+TYPE: request leave
+OUTPUT:
+REASONING:
