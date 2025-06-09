@@ -45,15 +45,15 @@ if user_input:
 
     fig, ax = plt.subplots(figsize=(6, 1))
 
-    # โหลดฟอนต์ไทย (ถ้ามี)
-    font_path = "./Sarabun-2/Sarabun-Regular.ttf"
+    # โหลดฟอนต์ Sarabun (โดยใช้ path แบบปลอดภัย)
+    font_path = os.path.join(os.path.dirname(__file__), "Sarabun-2", "Sarabun-Regular.ttf")
     if os.path.exists(font_path):
         font_prop = fm.FontProperties(fname=font_path)
         plt.rcParams['font.family'] = font_prop.get_name()
         font_use = font_prop
     else:
         st.warning("⚠️ ไม่พบฟอนต์ Sarabun ใช้ฟอนต์ระบบแทน")
-        font_use = None  # ใช้ default font
+        font_use = None
 
     # จัดข้อมูลสำหรับกราฟ
     sorted_indices = np.argsort(probs)[::-1]
@@ -69,7 +69,7 @@ if user_input:
             left + sorted_probs[i]/2, 0,
             f"{sorted_labels[i]} ({sorted_probs[i]*100:.1f}%)",
             va='center', ha='center', color='white', fontsize=10,
-            fontproperties=font_use  # ใช้ font เฉพาะถ้ามี
+            fontproperties=font_use  # ใช้ฟอนต์ Sarabun ถ้ามี
         )
         left += sorted_probs[i]
 
