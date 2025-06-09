@@ -55,27 +55,6 @@ if user_input:
         st.warning("⚠️ ไม่พบฟอนต์ Sarabun ใช้ฟอนต์ระบบแทน")
         font_use = None
 
-    # จัดข้อมูลสำหรับกราฟ
-    sorted_indices = np.argsort(probs)[::-1]
-    sorted_labels = [labels[i] for i in sorted_indices]
-    sorted_probs = [probs[i] for i in sorted_indices]
-    colors = ['gray'] * len(sorted_probs)
-    colors[0] = 'green'
-
-    left = 0
-    for i in range(len(sorted_probs)):
-        ax.barh(0, sorted_probs[i], left=left, height=0.4, color=colors[i], edgecolor='white')
-        ax.text(
-            left + sorted_probs[i]/2, 0,
-            f"{sorted_labels[i]} ({sorted_probs[i]*100:.1f}%)",
-            va='center', ha='center', color='white', fontsize=10,
-            fontproperties=font_use  # ใช้ฟอนต์ Sarabun ถ้ามี
-        )
-        left += sorted_probs[i]
-
-    ax.set_xlim(0, 1)
-    ax.axis('off')
-    st.pyplot(fig)
 
     # ==== แสดงกราฟแบบแท่งหลายแท่ง ====
     st.subheader("แสดงเปอร์เซ็นต์แยกตามระดับความสุภาพ")
