@@ -41,7 +41,6 @@ if user_input:
         st.write(f"**{label}**: {prob * 100:.2f}%")
 
     # ==== แสดงกราฟ ====
-    st.subheader("แสดงเป็นแท่งเดียวแบบแบ่งตามเปอร์เซ็นต์")
 
     fig, ax = plt.subplots(figsize=(6, 1))
 
