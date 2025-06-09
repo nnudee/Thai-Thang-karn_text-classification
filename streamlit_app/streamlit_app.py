@@ -35,11 +35,6 @@ if user_input:
     else:
         labels = [f"Class {i}" for i in range(len(probs))]
 
-    # แสดงผลลัพธ์ทีละบรรทัด
-    st.subheader("ผลการทำนาย (เป็นเปอร์เซ็นต์)")
-    for label, prob in zip(labels, probs):
-        st.write(f"**{label}**: {prob * 100:.2f}%")
-
     # ==== แสดงกราฟ ====
 
     fig, ax = plt.subplots(figsize=(6, 1))
@@ -69,7 +64,7 @@ if user_input:
                 ha='center', va='bottom', fontsize=10, fontproperties=font_use if font_use else None)
 
     ax.set_ylim(0, 1)
-    ax.set_ylabel("สัดส่วน (0 - 1)")
+    ax.set_ylabel("สัดส่วน (0 - 1)", fontproperties=font_use if font_use else None)
     ax.set_title("ความมั่นใจของโมเดลในแต่ละระดับ", fontproperties=font_use if font_use else None)
 
     # ตั้งชื่อแกนด้วยฟอนต์ไทย
