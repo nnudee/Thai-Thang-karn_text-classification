@@ -2,6 +2,7 @@ import streamlit as st
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import numpy as np
 
 MODEL_NAME = "nnudee/Thai-Thangkarn-classifier"
@@ -38,27 +39,31 @@ if user_input:
     for label, prob in zip(labels, probs):
         st.write(f"**{label}**: {prob * 100:.2f}%")
 
-    # วาดกราฟแท่งแนวนอน (horizontal bar) แบบ stacked ในแท่งเดียว
-    st.subheader("แสดงเป็นแท่งเดียวแบบแบ่งตามเปอร์เซ็นต์")
+# โหลดฟอนต์ไทย (เช่น TH Sarabun New) ถ้ามีในระบบ
+font_path = "./Sarabun-2/Sarabun-Regular.ttf"  # หรือ path ที่ฟอนต์อยู่จริง
+font_prop = fm.FontProperties(fname=font_path)
+plt.rcParams['font.family'] = font_prop.get_name()
 
-    fig, ax = plt.subplots(figsize=(8, 1.5))
+# วาดกราฟแบบแท่งเดียว
+st.subheader("แสดงเป็นแท่งเดียวแบบแบ่งตามเปอร์เซ็นต์")
 
-    # จัดเรียง label ตามลำดับของ prob (ไม่จำเป็นต้องเรียงถ้าไม่อยาก)
-    sorted_indices = np.argsort(probs)[::-1]
-    sorted_labels = [labels[i] for i in sorted_indices]
-    sorted_probs = [probs[i] for i in sorted_indices]
+fig, ax = plt.subplots(figsize=(6, 1))  # ✅ ปรับขนาดให้เล็กลง
 
-    # กำหนดสี โดย label ที่มีเปอร์เซ็นต์มากที่สุดเป็นสีเขียว
-    colors = ['gray'] * len(sorted_probs)
-    colors[0] = 'green'  # สีของ label ที่ความน่าจะเป็นมากที่สุด
+sorted_indices = np.argsort(probs)[::-1]
+sorted_labels = [labels[i] for i in sorted_indices]
+sorted_probs = [probs[i] for i in sorted_indices]
 
-    left = 0
-    for i in range(len(sorted_probs)):
-        ax.barh(0, sorted_probs[i], left=left, height=0.5, color=colors[i], edgecolor='white')
-        ax.text(left + sorted_probs[i]/2, 0, f"{sorted_labels[i]} ({sorted_probs[i]*100:.1f}%)", 
-                va='center', ha='center', color='white', fontsize=9)
-        left += sorted_probs[i]
+colors = ['gray'] * len(sorted_probs)
+colors[0] = 'green'
 
-    ax.set_xlim(0, 1)
-    ax.axis('off')  # ซ่อนแกน
-    st.pyplot(fig)
+left = 0
+for i in range(len(sorted_probs)):
+    ax.barh(0, sorted_probs[i], left=left, height=0.4, color=colors[i], edgecolor='white')
+    ax.text(left + sorted_probs[i]/2, 0, f"{sorted_labels[i]} ({sorted_probs[i]*100:.1f}%)",
+            va='center', ha='center', color='white', fontsize=10, fontproperties=font_prop)
+    left += sorted_probs[i]
+
+ax.set_xlim(0, 1)
+ax.axis('off')
+st.pyplot(fig)
+
