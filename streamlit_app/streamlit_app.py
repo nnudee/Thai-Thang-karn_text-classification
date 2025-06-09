@@ -4,6 +4,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import numpy as np
+import os
 
 MODEL_NAME = "nnudee/Thai-Thangkarn-classifier"
 
@@ -39,31 +40,39 @@ if user_input:
     for label, prob in zip(labels, probs):
         st.write(f"**{label}**: {prob * 100:.2f}%")
 
-# โหลดฟอนต์ไทย (เช่น TH Sarabun New) ถ้ามีในระบบ
-font_path = "./Sarabun-2/Sarabun-Regular.ttf"  # หรือ path ที่ฟอนต์อยู่จริง
-font_prop = fm.FontProperties(fname=font_path)
-plt.rcParams['font.family'] = font_prop.get_name()
+    # ==== แสดงกราฟ ====
+    st.subheader("แสดงเป็นแท่งเดียวแบบแบ่งตามเปอร์เซ็นต์")
 
-# วาดกราฟแบบแท่งเดียว
-st.subheader("แสดงเป็นแท่งเดียวแบบแบ่งตามเปอร์เซ็นต์")
+    fig, ax = plt.subplots(figsize=(6, 1))
 
-fig, ax = plt.subplots(figsize=(6, 1))  # ✅ ปรับขนาดให้เล็กลง
+    # โหลดฟอนต์ไทย (ถ้ามี)
+    font_path = "./Sarabun-2/Sarabun-Regular.ttf"
+    if os.path.exists(font_path):
+        font_prop = fm.FontProperties(fname=font_path)
+        plt.rcParams['font.family'] = font_prop.get_name()
+        font_use = font_prop
+    else:
+        st.warning("⚠️ ไม่พบฟอนต์ Sarabun ใช้ฟอนต์ระบบแทน")
+        font_use = None  # ใช้ default font
 
-sorted_indices = np.argsort(probs)[::-1]
-sorted_labels = [labels[i] for i in sorted_indices]
-sorted_probs = [probs[i] for i in sorted_indices]
+    # จัดข้อมูลสำหรับกราฟ
+    sorted_indices = np.argsort(probs)[::-1]
+    sorted_labels = [labels[i] for i in sorted_indices]
+    sorted_probs = [probs[i] for i in sorted_indices]
+    colors = ['gray'] * len(sorted_probs)
+    colors[0] = 'green'
 
-colors = ['gray'] * len(sorted_probs)
-colors[0] = 'green'
+    left = 0
+    for i in range(len(sorted_probs)):
+        ax.barh(0, sorted_probs[i], left=left, height=0.4, color=colors[i], edgecolor='white')
+        ax.text(
+            left + sorted_probs[i]/2, 0,
+            f"{sorted_labels[i]} ({sorted_probs[i]*100:.1f}%)",
+            va='center', ha='center', color='white', fontsize=10,
+            fontproperties=font_use  # ใช้ font เฉพาะถ้ามี
+        )
+        left += sorted_probs[i]
 
-left = 0
-for i in range(len(sorted_probs)):
-    ax.barh(0, sorted_probs[i], left=left, height=0.4, color=colors[i], edgecolor='white')
-    ax.text(left + sorted_probs[i]/2, 0, f"{sorted_labels[i]} ({sorted_probs[i]*100:.1f}%)",
-            va='center', ha='center', color='white', fontsize=10, fontproperties=font_prop)
-    left += sorted_probs[i]
-
-ax.set_xlim(0, 1)
-ax.axis('off')
-st.pyplot(fig)
-
+    ax.set_xlim(0, 1)
+    ax.axis('off')
+    st.pyplot(fig)
