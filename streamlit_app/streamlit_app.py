@@ -76,3 +76,26 @@ if user_input:
     ax.set_xlim(0, 1)
     ax.axis('off')
     st.pyplot(fig)
+
+    # ==== แสดงกราฟแบบแท่งหลายแท่ง ====
+    st.subheader("แสดงเปอร์เซ็นต์แยกตามระดับความสุภาพ")
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+
+    bars = ax.bar(labels, probs, color=["green" if i == np.argmax(probs) else "gray" for i in range(len(probs))])
+
+    # เพิ่มตัวเลขบนแต่ละแท่ง
+    for bar, prob in zip(bars, probs):
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2, height + 0.01, f"{prob*100:.1f}%", 
+                ha='center', va='bottom', fontsize=10, fontproperties=font_use if font_use else None)
+
+    ax.set_ylim(0, 1)
+    ax.set_ylabel("สัดส่วน (0 - 1)")
+    ax.set_title("ความมั่นใจของโมเดลในแต่ละระดับ", fontproperties=font_use if font_use else None)
+
+    # ตั้งชื่อแกนด้วยฟอนต์ไทย
+    ax.set_xticks(np.arange(len(labels)))
+    ax.set_xticklabels(labels, fontproperties=font_use if font_use else None, fontsize=10)
+
+    st.pyplot(fig)
