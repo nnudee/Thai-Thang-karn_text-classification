@@ -10,7 +10,7 @@ Consists :
 This dataset data-generator was developed based on inspiration from (https://github.com/intel/polite-guard)
 
 # Link
-- Blog : 
+- Blog : (https://medium.com/@nudee.5367/thang-karn-tone-model-thai-text-classification-de98e344b9b7)
 - Dataset : (https://huggingface.co/datasets/nnudee/Thai-Thangkarn-sentence)
 - Model : (https://huggingface.co/nnudee/Thai-Thangkarn-classifier)
 - Deploy : (https://thai-thang-karntext-classification-785c79dytcfaktdz2zv4lw.streamlit.app/)
