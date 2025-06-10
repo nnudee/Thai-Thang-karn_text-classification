@@ -23,8 +23,10 @@ st.title("ประโยคของคุณทางการระดับ�
 # ✅ โหลด test set
 @st.cache_data
 def load_test_data():
-    df = pd.read_csv("test_data.csv")  # เปลี่ยน path ตามจริง
-    return df["output"].tolist()
+    csv_path = os.path.join(os.path.dirname(__file__), "test_data.csv")
+    df = pd.read_csv(csv_path)
+    return df["text"].tolist()
+
 
 test_texts = load_test_data()
 
