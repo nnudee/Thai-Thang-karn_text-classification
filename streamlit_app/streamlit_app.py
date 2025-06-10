@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import numpy as np
 import os
+import pandas as pd
 
 MODEL_NAME = "nnudee/Thai-Thangkarn-classifier"
 
@@ -19,21 +20,21 @@ model.eval()
 
 st.title("ประโยคของคุณทางการระดับไหน?")
 
-# ==== กล่องเลือกข้อความตัวอย่าง ====
-sample_texts = {
-    "ขอความช่วยเหลือแบบสุภาพกลาง ๆ": "อาจารย์คะ หนูรบกวนสอบถามเกี่ยวกับการบ้านข้อสุดท้ายค่ะ",
-    "ข้อความไม่เป็นทางการ": "เฮ้ย เราไปกินข้าวกันเถอะ",
-    "ข้อความกึ่งทางการ": "สวัสดีครับอาจารย์ ผมอยากปรึกษาเรื่องโปรเจกต์ครับ",
-    "ข้อความทางการ": "เรียนอาจารย์ที่เคารพ ดิฉันขอแจ้งลาป่วยเนื่องจากมีไข้สูงค่ะ",
-    "ข้อความพิธีการ": "ข้าพเจ้าขอแสดงความนับถือและขออนุญาตชี้แจงรายละเอียดเพิ่มเติมตามเอกสารแนบ"
-}
-selected_label = st.selectbox("เลือกตัวอย่างข้อความ (หรือพิมพ์เองด้านล่าง)", [""] + list(sample_texts.keys()))
-preset_input = sample_texts.get(selected_label, "")
+# ✅ โหลด test set
+@st.cache_data
+def load_test_data():
+    df = pd.read_csv("./test_data.csv")  # เปลี่ยน path ตามจริง
+    return df["text"].tolist()
 
-# ==== ช่องพิมพ์ข้อความ ====
-user_input = st.text_area("ใส่ข้อความที่ต้องการทำนาย", value=preset_input)
+test_texts = load_test_data()
 
-# ==== ถ้ามี input ให้ประมวลผล ====
+# ✅ ให้ผู้ใช้เลือกข้อความจาก test set
+selected_text = st.selectbox("เลือกข้อความจากชุดทดสอบ", test_texts)
+
+# ✅ ช่องแสดงข้อความที่เลือก (แก้ไขได้)
+user_input = st.text_area("สามารถแก้ไขข้อความก่อนทำนายได้", value=selected_text)
+
+# ✅ ประมวลผลด้วยโมเดล
 if user_input:
     inputs = tokenizer(user_input, return_tensors="pt", truncation=True, padding=True)
 
@@ -48,7 +49,7 @@ if user_input:
     else:
         labels = [f"Class {i}" for i in range(len(probs))]
 
-    # ==== โหลดฟอนต์ Sarabun (ถ้ามี) ====
+    # ✅ โหลดฟอนต์ Sarabun
     font_path = os.path.join(os.path.dirname(__file__), "Sarabun-2", "Sarabun-Regular.ttf")
     if os.path.exists(font_path):
         font_prop = fm.FontProperties(fname=font_path)
@@ -58,17 +59,16 @@ if user_input:
         st.warning("⚠️ ไม่พบฟอนต์ Sarabun ใช้ฟอนต์ระบบแทน")
         font_use = None
 
-    # ==== แสดงผลลัพธ์ทีละบรรทัด ====
+    # ✅ แสดงผลลัพธ์ทีละบรรทัด
     st.subheader("ผลการทำนาย (เป็นเปอร์เซ็นต์)")
     for label, prob in zip(labels, probs):
         st.write(f"**{label}**: {prob * 100:.2f}%")
 
-    # ==== แสดงกราฟแท่งแยก ====
+    # ✅ กราฟหลายแท่ง
     st.subheader("แสดงเปอร์เซ็นต์แยกตามระดับความสุภาพ")
     fig, ax = plt.subplots(figsize=(8, 4))
 
     bars = ax.bar(labels, probs, color=["green" if i == np.argmax(probs) else "gray" for i in range(len(probs))])
-
     for bar, prob in zip(bars, probs):
         height = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2, height + 0.01, f"{prob*100:.1f}%",
