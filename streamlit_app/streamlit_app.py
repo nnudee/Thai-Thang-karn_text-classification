@@ -25,7 +25,7 @@ st.title("ประโยคของคุณทางการระดับ�
 def load_test_data():
     csv_path = os.path.join(os.path.dirname(__file__), "test_data.csv")
     df = pd.read_csv(csv_path)
-    return df["text"].tolist()
+    return df["output"].tolist()
 
 
 test_texts = load_test_data()
