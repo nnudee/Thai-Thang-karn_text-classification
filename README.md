@@ -1,7 +1,8 @@
 # Thai-Thang-karn_text-classification
 
 # Overview
-- This model is a text classification model designed to classify the level of formality of Thai sentences based on Thai language principles.
+- This model is a text classification model designed to classify the level of formality of Thai sentences based on 5 level of formality in Thai language principles.
+Consists :
   1. Generate Synthetic Data
   2. Finetuned model
   3. Deploy 
