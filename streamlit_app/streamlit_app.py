@@ -78,8 +78,10 @@ if user_input:
 
     ax.set_ylim(0, 1)
     ax.set_ylabel("สัดส่วน (0 - 1)", fontproperties=font_use if font_use else None)
-    ax.set_title("ความมั่นใจของโมเดลในแต่ละระดับ", fontproperties=font_use if font_use else None)
+    ax.set_title("", fontproperties=font_use if font_use else None)
     ax.set_xticks(np.arange(len(labels)))
     ax.set_xticklabels(labels, fontproperties=font_use if font_use else None, fontsize=10)
 
     st.pyplot(fig)
+
+st.markdown("**🔗 reference model link:** [Thai-Thangkarn-classifier on Hugging Face ](https://huggingface.co/nnudee/Thai-Thangkarn-classifier)")
