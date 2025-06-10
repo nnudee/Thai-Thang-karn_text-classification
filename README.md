@@ -1,11 +1,12 @@
 # Thai-Thang-karn_text-classification
 
 # Overview
+- This model is a text classification model designed to classify the level of formality of Thai sentences based on Thai language principles.
+  1. Generate Synthetic Data
+  2. Finetuned model
+  3. Deploy 
 
-
-This dataset was developed based on inspiration from data-generator (https://github.com/intel/polite-guard)
-
-# 
+This dataset data-generator was developed based on inspiration from (https://github.com/intel/polite-guard)
 
 # Link
 - Blog : 
